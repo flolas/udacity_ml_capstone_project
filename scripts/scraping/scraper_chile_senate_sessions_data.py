@@ -59,7 +59,6 @@ class SenadoSesionesScraper(BaseSpider):
             path = self.PATH + response.meta['filename']
             self.logger.info('Saving PDF %s', path)
             path = unidecode.unidecode(path)
-            logging.info('Saving PDF %s', path)
             with open(path, 'wb') as f:
                 f.write(response.body)
             self.logger.info('Extracting text from PDF %s', path)
