@@ -35,7 +35,11 @@ class SenadoSesionesScraper(BaseSpider):
         
         for legislatura in response.css("[name=legislaturas] > option ::attr(value)").extract():
             self.logger.info('Parseando la legislatura : %s', legislatura)
-            for sesion in response.css(".seccion2 tr"):
+            yield Request(self.make_legislatura_url(legislatura), dont_filter=True, callback=self.save_pdf, meta ={'legislatura':legislatura})
+
+    def parse_legislatura(self, response):
+        legislatura = response.meta['legislatura']
+        for sesion in response.css(".seccion2 tr"):
                 try:
                     Tipo = sesion.css("td:nth-child(2) ::text").extract()[0].strip().replace(' ', '_')
                     Fecha =  datetime.strptime(sesion.css("td:nth-child(3) ::text").extract()[0], "%A %d de %B de %Y").strftime("%Y%m%d")
@@ -48,6 +52,7 @@ class SenadoSesionesScraper(BaseSpider):
                 except Exception as e:
                     self.logger.info(e)
                     pass
+
     def save_pdf(self, response):
             path = self.PATH + response.meta['filename']
             self.logger.info('Saving PDF %s', path)
