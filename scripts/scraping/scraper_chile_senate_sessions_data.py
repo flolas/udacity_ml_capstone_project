@@ -11,6 +11,8 @@ from pdfminer.pdfpage import PDFPage
 import logging
 from scrapy.http import Request
 from scrapy.spider import BaseSpider
+import unidecode
+
 
 locale.setlocale(locale.LC_ALL, 'es_ES.UTF-8')
 logging.propagate = False 
@@ -56,8 +58,10 @@ class SenadoSesionesScraper(BaseSpider):
     def save_pdf(self, response):
             path = self.PATH + response.meta['filename']
             self.logger.info('Saving PDF %s', path)
+            path = unidecode.unidecode(path)
+            logging.info('Saving PDF %s', path)
             with open(path, 'wb') as f:
-                f.write(response.body).encode("iso-8859-2", "replace")
+                f.write(response.body)
             self.logger.info('Extracting text from PDF %s', path)
             text = self.convert_pdf_to_txt(path)
             text_file = open(path + '.txt', "w")
