@@ -70,7 +70,7 @@ class SenadoSesionesScraper(BaseSpider):
     def convert_pdf_to_txt(self, path):
         rsrcmgr = PDFResourceManager()
         retstr = io.StringIO()
-        codec = 'utf-8'
+        codec = 'latin1'
         laparams = LAParams()
         device = TextConverter(rsrcmgr, retstr, codec=codec, laparams=laparams)
         fp = open(path, 'rb')
