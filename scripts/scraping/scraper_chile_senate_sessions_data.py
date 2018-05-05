@@ -35,7 +35,7 @@ class SenadoSesionesScraper(BaseSpider):
         
         for legislatura in response.css("[name=legislaturas] > option ::attr(value)").extract():
             self.logger.info('Parseando la legislatura : %s', legislatura)
-            yield Request(self.make_legislatura_url(legislatura), dont_filter=True, callback=self.save_pdf, meta ={'legislatura':legislatura})
+            yield Request(self.make_legislatura_url(legislatura), dont_filter=True, callback=self.parse_legislatura, meta ={'legislatura':legislatura})
 
     def parse_legislatura(self, response):
         legislatura = response.meta['legislatura']
